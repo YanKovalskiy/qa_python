@@ -57,5 +57,18 @@ class TestBooksCollector:
         collector.set_book_genre(book_name, book_genre)
         assert collector.get_book_genre(book_name) == book_genre
 
-    def test_get_books_with_specific_genre(self, collector):
-        pass
+    def test_get_books_with_specific_genre_existing_genre_positive_result(self, collector):
+        book_name = 'Рассказы о Шерлоке Холмсе'
+        book_genre = 'Детективы'
+        collector.add_new_book(book_name)
+        collector.set_book_genre(book_name, book_genre)
+
+        book_genre = 'Фантастика'
+        book_name = 'Двадцать тысяч лье под водой'
+        collector.add_new_book(book_name)
+        collector.set_book_genre(book_name, book_genre)
+        book_name = 'Человек-амфибия'
+        collector.add_new_book(book_name)
+        collector.set_book_genre(book_name, book_genre)
+
+        assert len(collector.get_books_with_specific_genre('Фантастика')) == 2
