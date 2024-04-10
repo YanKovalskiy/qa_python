@@ -9,7 +9,7 @@ class TestBooksCollector:
         return BooksCollector()
 
     @pytest.fixture()
-    def date_for_get_books(self, collector):
+    def date_books(self, collector):
         book = {
             'Рассказы о Шерлоке Холмсе': 'Детективы',
             'Двадцать тысяч лье под водой': 'Фантастика',
@@ -20,8 +20,6 @@ class TestBooksCollector:
         for book_name, book_genre in book.items():
             collector.add_new_book(book_name)
             collector.set_book_genre(book_name, book_genre)
-
-        return len(book)
 
     def test_add_new_book_add_two_books(self, collector):
         collector.add_new_book('Гордость и предубеждение и зомби')
@@ -81,9 +79,39 @@ class TestBooksCollector:
         )
     )
     def test_get_books_with_specific_genre_any_genre_book_list(self, collector,
-                                                               date_for_get_books,
+                                                               date_books,
                                                                book_genre, expected_result):
         assert len(collector.get_books_with_specific_genre(book_genre)) == expected_result
 
-    def test_get_books_genre_full_list_of_books(self, collector, date_for_get_books):
-        assert len(collector.get_books_genre()) == date_for_get_books
+    def test_get_books_genre_full_list_of_books(self, collector, date_books):
+        assert len(collector.get_books_genre()) == 4
+
+    def test_get_books_for_children_list_book_without_age_rating(self, collector, date_books):
+        assert len(collector.get_books_for_children()) == 2
+
+    def test_add_book_in_favorites_existing_book_add_to_favorite(self, collector, date_books):
+        collector.add_book_in_favorites('Двадцать тысяч лье под водой')
+        assert len(collector.get_list_of_favorites_books()) == 1
+
+    def test_add_book_in_favorites_add_one_book_twice(self, collector, date_books):
+        book_name = 'Двадцать тысяч лье под водой'
+        collector.add_book_in_favorites(book_name)
+        collector.add_book_in_favorites(book_name)
+        assert len(collector.get_list_of_favorites_books()) == 1
+
+    @pytest.mark.parametrize(
+        'book_name, expected_result',
+        (
+                ('Двадцать тысяч лье под водой', 0),
+                ('Гордость и предубеждение', 1),
+
+        )
+    )
+    def test_delete_book_from_favorites(self, collector, date_books, book_name, expected_result):
+        collector.add_book_in_favorites('Двадцать тысяч лье под водой')
+        collector.delete_book_from_favorites(book_name)
+        assert len(collector.get_list_of_favorites_books()) == expected_result
+
+    def test_get_list_of_favorites_books(self, collector, date_books):
+        collector.add_book_in_favorites('Двадцать тысяч лье под водой')
+        assert len(collector.get_list_of_favorites_books()) == 1
