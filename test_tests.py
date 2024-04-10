@@ -9,7 +9,7 @@ class TestBooksCollector:
         return BooksCollector()
 
     @pytest.fixture()
-    def date_for_get_books_with_specific(self, collector):
+    def date_for_get_books(self, collector):
         book_name = 'Рассказы о Шерлоке Холмсе'
         book_genre = 'Детективы'
         collector.add_new_book(book_name)
@@ -84,7 +84,10 @@ class TestBooksCollector:
         )
     )
     def test_get_books_with_specific_genre_any_genre_book_list(self, collector,
-                                                                          date_for_get_books_with_specific,
-                                                                          book_genre, expected_result):
+                                                               date_for_get_books,
+                                                               book_genre, expected_result):
 
         assert len(collector.get_books_with_specific_genre(book_genre)) == expected_result
+
+    def test_get_books_genre_full_list_of_books(self, collector, date_for_get_books):
+        assert len(collector.get_books_genre()) == 3
