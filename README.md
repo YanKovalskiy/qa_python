@@ -6,3 +6,4 @@
 - **test_set_book_genre_add_existing_genre_to_existing_book** - проверка добавления существующего жанра к существующей книге
 - **test_set_book_genre_add_genre_to_existing_book** - проверка добавления жанра к существующей книге
 - **test_set_book_genre_add_genre_to_not_existing_book** - проверка добавления жанра к не существующей книге
+- **test_get_book_genre_existing_book_book_genre** - проверка получения жанра существующей книги
