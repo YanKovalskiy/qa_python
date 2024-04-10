@@ -8,6 +8,24 @@ class TestBooksCollector:
     def collector(self):
         return BooksCollector()
 
+    @pytest.fixture()
+    def date_for_get_books_with_specific(self, collector):
+        book_name = 'Рассказы о Шерлоке Холмсе'
+        book_genre = 'Детективы'
+        collector.add_new_book(book_name)
+        collector.set_book_genre(book_name, book_genre)
+
+        book_genre = 'Фантастика'
+
+        book_name = 'Двадцать тысяч лье под водой'
+        collector.add_new_book(book_name)
+        collector.set_book_genre(book_name, book_genre)
+
+        book_name = 'Человек-амфибия'
+        collector.add_new_book(book_name)
+        collector.set_book_genre(book_name, book_genre)
+
+
     def test_add_new_book_add_two_books(self, collector):
         collector.add_new_book('Гордость и предубеждение и зомби')
         collector.add_new_book('Что делать, если ваш кот хочет вас убить')
@@ -57,18 +75,16 @@ class TestBooksCollector:
         collector.set_book_genre(book_name, book_genre)
         assert collector.get_book_genre(book_name) == book_genre
 
-    def test_get_books_with_specific_genre_existing_genre_positive_result(self, collector):
-        book_name = 'Рассказы о Шерлоке Холмсе'
-        book_genre = 'Детективы'
-        collector.add_new_book(book_name)
-        collector.set_book_genre(book_name, book_genre)
+    @pytest.mark.parametrize(
+        'book_genre, expected_result',
+        (
+                ('Фантастика', 2),
+                ('Детективы', 1),
+                ('Мелодрама', 0),
+        )
+    )
+    def test_get_books_with_specific_genre_any_genre_book_list(self, collector,
+                                                                          date_for_get_books_with_specific,
+                                                                          book_genre, expected_result):
 
-        book_genre = 'Фантастика'
-        book_name = 'Двадцать тысяч лье под водой'
-        collector.add_new_book(book_name)
-        collector.set_book_genre(book_name, book_genre)
-        book_name = 'Человек-амфибия'
-        collector.add_new_book(book_name)
-        collector.set_book_genre(book_name, book_genre)
-
-        assert len(collector.get_books_with_specific_genre('Фантастика')) == 2
+        assert len(collector.get_books_with_specific_genre(book_genre)) == expected_result
