@@ -10,21 +10,18 @@ class TestBooksCollector:
 
     @pytest.fixture()
     def date_for_get_books(self, collector):
-        book_name = 'Рассказы о Шерлоке Холмсе'
-        book_genre = 'Детективы'
-        collector.add_new_book(book_name)
-        collector.set_book_genre(book_name, book_genre)
+        book = {
+            'Рассказы о Шерлоке Холмсе': 'Детективы',
+            'Двадцать тысяч лье под водой': 'Фантастика',
+            'Человек-амфибия': 'Фантастика',
+            'Хребты безумия': 'Ужасы',
+        }
 
-        book_genre = 'Фантастика'
+        for book_name, book_genre in book.items():
+            collector.add_new_book(book_name)
+            collector.set_book_genre(book_name, book_genre)
 
-        book_name = 'Двадцать тысяч лье под водой'
-        collector.add_new_book(book_name)
-        collector.set_book_genre(book_name, book_genre)
-
-        book_name = 'Человек-амфибия'
-        collector.add_new_book(book_name)
-        collector.set_book_genre(book_name, book_genre)
-
+        return len(book)
 
     def test_add_new_book_add_two_books(self, collector):
         collector.add_new_book('Гордость и предубеждение и зомби')
@@ -86,8 +83,7 @@ class TestBooksCollector:
     def test_get_books_with_specific_genre_any_genre_book_list(self, collector,
                                                                date_for_get_books,
                                                                book_genre, expected_result):
-
         assert len(collector.get_books_with_specific_genre(book_genre)) == expected_result
 
     def test_get_books_genre_full_list_of_books(self, collector, date_for_get_books):
-        assert len(collector.get_books_genre()) == 3
+        assert len(collector.get_books_genre()) == date_for_get_books
